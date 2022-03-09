@@ -10,6 +10,11 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
 
+class song(object):
+    def __init__(self, artist, track):
+        self.artist = artist
+        self.track = track
+
 class YT_client(object):
     def __init__(self, credentials_locations):
         scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
@@ -41,3 +46,24 @@ class YT_client(object):
         playlist = [playlist for playlist in response['items']]
 
         return playlist
+
+    def get_vid_from_pList(self, plist_Id):
+        songs = []
+        request = self.YT_client.playlistItem().list(
+            plist_Id = plist_Id,
+            part = "id, snippet",
+        )
+        response = request.execute()
+
+        for item in response['item']:
+            video_Id = item['snippet']['resourceId']['videoId']
+            artist, track = self.get_artist_and_track_from_video(video_Id)
+            if artist and track:
+                songs.append(song(artist,track))
+
+    def get_artist_track_from_vid(self, video_Id):
+
+        YT_url = f'https://www.youtube.com/watch?v={video_Id}'
+        vid = youtube_dl.YoutubeDL({'quiet': True}).extract_info(
+            
+        )
