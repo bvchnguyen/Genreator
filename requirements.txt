@@ -1,0 +1,8 @@
+Spotify reqs:
+
+client_secret = '8b8f84986ce14d85938329f19ad5049a'
+client_id = '2cdc73746b314ec5874e9c8f2e27dedc'
+encoded_uri = 'redirect_uri=https%3A%2F%2Fgithub.com%2Fbvchnguyen'
+scope = 'scope=playlist-modify-public%20playlist-modify-private'
+
+req link = https://accounts.spotify.com/authorize?client_id=2cdc73746b314ec5874e9c8f2e27dedc&response_type=code&redirect_uri=https%3A%2F%2Fgithub.com%2Fbvchnguyen&scope=playlist-modify-public%20playlist-modify-private
