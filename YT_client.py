@@ -12,6 +12,7 @@ class YT_stats:
         self.channel_id = channel_id
         self.channel_statistics = None
         self.video_data = None
+        self.video_title = None
 
     def get_channel_stats(self):
 
@@ -35,35 +36,59 @@ class YT_stats:
         
         # Assign our channel_statistics object to the data found
         self.channel_statistics = data
-        print(self.channel_statistics)
+        # print(self.channel_statistics)
         return data
-    
-    def get_channel_video_data(self):
-        channel_videos = self._get_channel_videos(limit=10)
-        print(channel_videos)
-        print(len(channel_videos))
 
-        # parts = ["snippets", "statistics", "contentDetails"]
-        # for video_id in channel_videos:
-        #     for part in parts:
-        #         data = self._get_single_video_data(video_id, part)
-        #         channel_videos[video_id].update(data)
+    def get_channel_video_title(self):
+        # Function to get the title of from the json data
+        title = []
+        # Get the json data through _get_channel_videos function
+        channel_videos = self._get_channel_videos(limit=5)
 
-        # self.video_data = channel_videos
-        # return channel_videos
-    
+        # We loop through to channel_videos to get the title
+        for video_id in channel_videos:
+            # Call the _get_single_video_title function to get the title
+            data = self._get_single_video_title(video_id, 'snippet')
+            # Append the returned data (In this case, the title string)
+            title.append(data)
 
-    def _get_single_video_data(self, video_id, part):
-        url = f'https://www.googleapis.com/youtube/v3/video?part={part}&id={video_id}&key={self.api_key}'
+        # Assign the list to the video_data object
+        self.video_title = title
+        return title
+
+    def split_title(title_list):
+        # Function to split the title between the artist and song
+        # In most format on youtube, the title consists of Artist - Song Name
+        # Here, we will consider the featuring artist to be a part of the song name for simplicity
+        artist = []
+        song_name = []
+        # Loop through the title list
+        for title in title_list: 
+            # Loop through each title string
+            for i in range(len(title)):
+                # Once we find the delimiter "-", we can slice the string into two
+                if title[i] == "-":
+                    # Artist is anything before the delimiter
+                    str_artist = title[0:i-1]
+                    # Song title is anything after the delimiter
+                    str_song_name = title[i + 2:len(title)]
+                    # Append them to the corresponding list
+                    artist.append(str_artist)
+                    song_name.append(str_song_name)
+        return artist, song_name
+        
+
+    def _get_single_video_title(self, video_id, part):
+        url = f'https://www.googleapis.com/youtube/v3/videos?part={part}&id={video_id}&key={self.api_key}'
 
         json_url = requests.get(url)
         data = json.loads(json_url.text)
+        # print(data)
         try:
-            data = data['items'][0][part]
+            data = data['items'][0]["snippet"]["title"]
         except:
             print('Error')
             data = dict()
-
         return data
 
     def _get_channel_videos(self, limit = None):
@@ -73,13 +98,10 @@ class YT_stats:
         # Get the URL from google API and pass it as an f string to URL variable
         # We passed in the channel_ID and api_key in the query slots
         url = f'https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=id&order=date'
-        
         # We check to see if limit is not None, and that it is in instance of an int datatype
         if limit is not None and isinstance(limit, int):
-            
             # If conditions are true, we append our desired max result into the url string
             url += '&maxResults=' + str(limit)
-        
         # This block is primarily use for if you have 50+ returned results
         # Which would result in the data being stored on multiple json pages
         # We call our per page helper function and pass through the url
@@ -89,18 +111,13 @@ class YT_stats:
         # While loop to run through the number of next pages available
         # We want it to run no more than 10 times per call since 
         # we only have a limited API calls per day
-
-        while(npt is not None and i < 2):
-
+        while(npt is not None and i < 1):
             # We append the page token query into the url
             next_url = url + '&pageToken=' + npt
-            
             # Pass it to the per page helper function
             next_vid, npt = self._get_channel_videos_per_page(next_url)
-
             # Update the dictionary if the key does not exists in it
             vid.update(next_vid)
-
             # Increment our index
             i += 1
 
@@ -110,25 +127,19 @@ class YT_stats:
 
         # This function is only useful if your desired max result is over 50,
         # which the returned results will be stored into multiple pages
-
         json_url = requests.get(url)
         data = json.loads(json_url.text)
-        print(data)
-
         # Declare a dictionary for channel videos
         channel_videos = dict()
-
         # If there are no items in the json file we just parsed, then we return function
         if 'items' not in data:
             print('not found')
             return channel_videos, None
-
         # Here, we are looping through each pages of json file given for that channel
         item_data = data['items']
-
         # Get the nextPageToken, or return None if there is none
         nextPageToken = data.get('nextPageToken', None)
-        print(nextPageToken)
+        # print(nextPageToken)
         for item in item_data: 
             try: 
                 kind = item['id']['kind']
@@ -138,22 +149,22 @@ class YT_stats:
             except KeyError:
                 print("No video found.")
         
-
         return channel_videos, nextPageToken
 
     def dump(self):
-
+        # Function to dump the json data onto a json file in local directory
         # Create a json file in our directory so we don't have to open it as a link
 
         # If get_channel_stats returned channel_statistics object as none, we exit function
-        if self.channel_statistics is None:
+        if self.channel_statistics is None or self.video_data is None:
             print('No data is found')
             return
-        # fused_data = {self.channel_id: {'channel_statistics': self.channel_statistics,
-        #                                 'video_data': self.video_data}}
+            
+        fused_data = {self.channel_id: {'channel_statistics': self.channel_statistics,
+                                        'video_data': self.video_data}}
 
-        # channel_title = self.video_data.popitem()[1].get('channelTitle', self.channel_id)
-        channel_title = "Trap City"
+        channel_title = self.video_data.popitem()[1].get('channelTitle', self.channel_id)
+        # channel_title = "Trap City"
 
         # Replace any whitespace in filename with underscore (and lowercase it)
         channel_title = channel_title.replace(" ", "_").lower()
@@ -163,4 +174,4 @@ class YT_stats:
         
         # Open the file as write-able
         with open(file_name, 'w') as f:
-            json.dump(self.channel_statistics, f, indent = 4)
+            json.dump(fused_data, f, indent = 4)
