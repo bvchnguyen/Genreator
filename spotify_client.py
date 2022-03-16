@@ -7,41 +7,27 @@ import requests
 import urllib.parse
 import json
 
+# Spotipy documentation -- https://spotipy.readthedocs.io/en/2.19.0/#
+
 class SpotifyClient(object):
 
-    def test_spotipy(self):
-
-        birdy_uri = 'spotify:artist:2WX2uTcsvV5OnS0inACecP'
+    def search_spotify(self, artist_list, title_list):
+        # Function to search spotify using spotipy by using the artist and title list that we've returned in YT_client
+        
+        # Initalizing and verifying our spotify credentials
+        # May move this to _init_, but for now, keeping this here for further testing
         spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
             client_id=clientId, client_secret=clientSec
         ))
-
-        results = spotify.artist_albums(birdy_uri, album_type='album')
-        albums = results['items']
-        while results['next']:
-            results = spotify.next(results)
-            albums.extend(results['items'])
-
-        for album in albums:
-            print(album['name'])
-    
-    # def __init__(self, api_token):
-    #     self.api_token = api_token
-
-    def test_search(self, artist_list, title_list):
-
-        # birdy_uri = 'spotify:artist:2WX2uTcsvV5OnS0inACecP'
-        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
-            client_id=clientId, client_secret=clientSec
-        ))
+        # Loop through our artist & Title list
         for i in range(len(artist_list)):
             artist = artist_list[i]
             track_name = title_list[i]
-            results = spotify.search(q="artist:" + artist + " track:" + track_name, type="track")
-            if results == None: 
-                print("cannot find " + artist + track_name)
-            else:
-                print("found " + artist + track_name)  
+            # Call the spotipy search function and pass through the given parameters
+            # For our case, we want just the top result found when searching, thus, limit = 1
+            # Result will return with json data regarding what's found
+            results = spotify.search(q="artist:" + artist + " track:" + track_name, limit=1, type="track")
+            print(results)
 
     def create_playlist(self, name, description):
         # Function to create a playlist based on user's input
