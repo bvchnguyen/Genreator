@@ -5,8 +5,11 @@ and add them to a playlist either by genre or by user's choice.
 
 ### Technologies:
 Python
+
 Youtube Data API
+
 Spotify API
+
 Spotipy
 
 ### Requirements
@@ -27,6 +30,7 @@ To obtain a channel ID, go to a page that you would like, for demonstration purp
 * Enter this when choosing option '02' in the main menu.
 * Then the program will extract up to n amount of videos from the channel, where n is the determined limit.
 * The program will then search through spotify and add it to an existing playlist
+* NOTE that a lot of YouTube's music are bootlegs, unofficial, or some artist are not on spotify yet. This means that the search is not perfect. I would recommend trying to find a playlist or channel that uploads official music.
 
 ### Goals (for future implementation)
 * Finish create a playlist option
