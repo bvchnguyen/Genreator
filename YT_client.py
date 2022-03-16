@@ -1,9 +1,11 @@
 import json
+from turtle import update
 from weakref import KeyedRef
 import youtube_dl
 import requests
 import json
 import pprint
+import re
 
 class YT_stats:
     
@@ -13,6 +15,13 @@ class YT_stats:
         self.channel_statistics = None
         self.video_data = None
         self.video_title = None
+
+
+    def get_channel_id(self, input):
+        # Function to get channel ID from user's input and store
+        # It as a class object
+        self.channel_id = input
+        return self.channel_id
 
     def get_channel_stats(self):
 
@@ -51,12 +60,23 @@ class YT_stats:
             data = self._get_single_video_title(video_id, 'snippet')
             # Append the returned data (In this case, the title string)
             title.append(data)
-
+        print(title)
         # Assign the list to the video_data object
         self.video_title = title
         return title
 
-    def split_title(title_list):
+    def filter_name(self, song_name):
+        # Function to filter the name of the song using REGEX
+        # If the name includes things such as (lyrics), (official music video), etc
+        # This helps filter the name so that it's easier to search in spotify
+        updated_name = []
+        temp = ""
+        for song in song_name:
+            temp = re.sub(r'\([^()]*\)', '', song)
+            updated_name.append(temp)
+        return updated_name
+
+    def split_title(self, title_list):
         # Function to split the title between the artist and song
         # In most format on youtube, the title consists of Artist - Song Name
         # Here, we will consider the featuring artist to be a part of the song name for simplicity
@@ -75,8 +95,8 @@ class YT_stats:
                     # Append them to the corresponding list
                     artist.append(str_artist)
                     song_name.append(str_song_name)
+        song_name = self.filter_name(song_name)
         return artist, song_name
-        
 
     def _get_single_video_title(self, video_id, part):
         url = f'https://www.googleapis.com/youtube/v3/videos?part={part}&id={video_id}&key={self.api_key}'
