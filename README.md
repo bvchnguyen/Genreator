@@ -1,4 +1,4 @@
-# Genreator
+# Genre-ator
 
 A python script that extracts a playlist or a series of videos from a youtube channel, search for each song in spotify
 and add them to a playlist either by genre or by user's choice.
