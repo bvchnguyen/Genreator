@@ -37,7 +37,7 @@ class YT_stats:
         # Grabing the first item in the items list of our loaded json file
         # Then grab the "statistics" value of that first item
         try:
-            data = data["items"][0]["statistics"]
+            data = data['items'][0]['statistics']
         
         # If failed to load, return None
         except KeyError:
@@ -70,7 +70,7 @@ class YT_stats:
         # If the name includes things such as (lyrics), (official music video), etc
         # This helps filter the name so that it's easier to search in spotify
         updated_name = []
-        temp = ""
+        temp = ''
         for song in song_name:
             temp = re.sub(r'\([^()]*\)', '', song)
             updated_name.append(temp)
@@ -87,7 +87,7 @@ class YT_stats:
             # Loop through each title string
             for i in range(len(title)):
                 # Once we find the delimiter "-", we can slice the string into two
-                if title[i] == "-":
+                if title[i] == '=':
                     # Artist is anything before the delimiter
                     str_artist = title[0:i-1]
                     # Song title is anything after the delimiter
@@ -105,7 +105,7 @@ class YT_stats:
         data = json.loads(json_url.text)
         # print(data)
         try:
-            data = data['items'][0]["snippet"]["title"]
+            data = data['items'][0]['snippet']['title']
         except:
             print('Error')
             data = dict()
@@ -167,7 +167,7 @@ class YT_stats:
                     video_id = item['id']['videoId']
                     channel_videos[video_id] = dict()
             except KeyError:
-                print("No video found.")
+                print('No video found.')
         
         return channel_videos, nextPageToken
 
@@ -187,7 +187,7 @@ class YT_stats:
         # channel_title = "Trap City"
 
         # Replace any whitespace in filename with underscore (and lowercase it)
-        channel_title = channel_title.replace(" ", "_").lower()
+        channel_title = channel_title.replace(' ', '_').lower()
 
         # Assign the file as a json file
         file_name = channel_title + '.json'
