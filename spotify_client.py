@@ -11,6 +11,14 @@ import json
 
 class SpotifyClient(object):
 
+    def __init__(self, clientId, clientSec, userID):
+        self.client_ID = clientId
+        self.client_Secret = clientSec
+        self.user_id = userID
+
+    def user_info():
+        return
+
     def search_spotify(self, artist_list, title_list):
         # Function to search spotify using spotipy by using the artist and title list that we've returned in YT_client
         
@@ -29,17 +37,10 @@ class SpotifyClient(object):
             results = spotify.search(q="artist:" + artist + " track:" + track_name, limit=1, type="track")
             print(results)
 
-    def create_playlist(self, name, description):
+    def create_playlist(self, user_id, playlist_name, public_val, playlist_description):
         # Function to create a playlist based on user's input
-        # Get the name and the description in main
-        # Add them to json data
-        data = json.dumps({
-            "name": name,
-            "description": description
-        })
-        # API url
-        url = f"https://api.spotify.com/v1/users/{self.user_id}/playlists"
-        response = self._pl
+        spotipy.user_playlist_create(user = user_id, name = playlist_name, public=public_val, 
+                                    collaborative=False, description=playlist_description)
 
     def search_song(self, artist, track):
         # Function to search the song by the artist and name
