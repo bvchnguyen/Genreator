@@ -16,7 +16,6 @@ class YT_stats:
         self.video_data = None
         self.video_title = None
 
-
     def get_channel_id(self, input):
         # Function to get channel ID from user's input and store
         # It as a class object
@@ -60,7 +59,7 @@ class YT_stats:
             data = self._get_single_video_title(video_id, 'snippet')
             # Append the returned data (In this case, the title string)
             title.append(data)
-        print(title)
+        # print(title)
         # Assign the list to the video_data object
         self.video_title = title
         return title
@@ -72,7 +71,7 @@ class YT_stats:
         updated_name = []
         temp = ''
         for song in song_name:
-            temp = re.sub(r'\([^()]*\)', '', song)
+            temp = re.sub(r'[\(\[].*?[\)\]]', '', song)
             updated_name.append(temp)
         return updated_name
 
