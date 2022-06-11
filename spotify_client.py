@@ -1,6 +1,7 @@
 from cgitb import reset
 from spotipy.oauth2 import SpotifyClientCredentials
 from secret_data import clientId, clientSec
+from helper_func import inputValidation
 import spotipy
 import spotipy.util as util
 import requests
@@ -37,10 +38,22 @@ class SpotifyClient(object):
             results = spotify.search(q="artist:" + artist + " track:" + track_name, limit=1, type="track")
             print(results)
 
-    def create_playlist(self, user_id, playlist_name, public_val, playlist_description):
+    def create_playlist(self, user_id):
         # Function to create a playlist based on user's input
-        spotipy.user_playlist_create(user = user_id, name = playlist_name, public=public_val, 
-                                    collaborative=False, description=playlist_description)
+        playlistName = input('Name your playlist: ')
+        playlistDesc = input('Describe your playlist: ')
+        publicValidation = False
+        returnedInput = inputValidation.public_input_validation()
+        if returnedInput == 'Y':
+            publicValidation = True
+
+        spotipy.user_playlist_create(user = user_id, name = playlistName, public=publicValidation, 
+                                    collaborative=False, description=playlistDesc)
+
+    # def create_playlist(self, user_id, playlist_name, public_val, playlist_description):
+    #     # Function to create a playlist based on user's input
+    #     spotipy.user_playlist_create(user = user_id, name = playlist_name, public=public_val, 
+    #                                 collaborative=False, description=playlist_description)
 
     def search_song(self, artist, track):
         # Function to search the song by the artist and name
