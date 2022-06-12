@@ -16,8 +16,21 @@ class SpotifyClient(object):
         self.client_ID = clientId
         self.client_Secret = clientSec
         self.user_id = userID
+        self.spotipy_lib = None
 
-    def user_info():
+    def spfy_spotipy(self):
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+                               client_id=clientId, client_secret=clientSec))
+
+        self.spotipy_lib = spotify
+        return spotify
+        
+    def user_validation(self, user_name) -> None:
+        try:
+            self.spfy_spotipy().user(user_name)
+            print(f'Access granted: Welcome {user_name}')
+        except:
+            print(f'No user found under the name {user_name}')
         return
 
     def search_spotify(self, artist_list, title_list):
@@ -35,7 +48,7 @@ class SpotifyClient(object):
             # Call the spotipy search function and pass through the given parameters
             # For our case, we want just the top result found when searching, thus, limit = 1
             # Result will return with json data regarding what's found
-            results = spotify.search(q="artist:" + artist + " track:" + track_name, limit=1, type="track")
+            results = spotify.search(q='artist:' + artist + ' track:' + track_name, limit=1, type='track')
             print(results)
 
     def create_playlist(self, user_id):
@@ -49,11 +62,6 @@ class SpotifyClient(object):
 
         spotipy.user_playlist_create(user = user_id, name = playlistName, public=publicValidation, 
                                     collaborative=False, description=playlistDesc)
-
-    # def create_playlist(self, user_id, playlist_name, public_val, playlist_description):
-    #     # Function to create a playlist based on user's input
-    #     spotipy.user_playlist_create(user = user_id, name = playlist_name, public=public_val, 
-    #                                 collaborative=False, description=playlist_description)
 
     def search_song(self, artist, track):
         # Function to search the song by the artist and name
