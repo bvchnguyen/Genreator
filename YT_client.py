@@ -1,3 +1,4 @@
+import dataclasses
 import json
 from turtle import update
 from weakref import KeyedRef
@@ -7,12 +8,13 @@ import json
 import pprint
 import re
 
-class YT_stats:
+class YT_stats(object):
     
     def __init__(self, api_key, channel_id):
         self.api_key = api_key
         self.channel_id = channel_id
         self.channel_statistics = None
+        self.channel_name = None
         self.video_data = None
         self.video_title = None
 
@@ -35,6 +37,7 @@ class YT_stats:
         data = json.loads(json_url.text)
         # Grabing the first item in the items list of our loaded json file
         # Then grab the "statistics" value of that first item
+        # print(data)
         try:
             data = data['items'][0]['statistics']
         
@@ -47,22 +50,60 @@ class YT_stats:
         # print(self.channel_statistics)
         return data
 
-    def get_channel_video_title(self):
+    def get_channel_title(self, video_id, part) -> dict:
+        url = f'https://www.googleapis.com/youtube/v3/videos?part={part}&id={video_id}&key={self.api_key}'
+
+        json_url = requests.get(url)
+        data = json.loads(json_url.text)
+        # print(data)
+        try:
+            data = data['items'][0]['snippet']['channelTitle']
+        except:
+            print('Error')
+            data = dict()
+        # print(data)
+        return data
+
+    def get_channel_name(self) -> str:
+        # Get the json data through _get_channel_videos function
+        name = []
+        channel_videos = self.get_channel_videos(limit=1)
+        # We loop through to channel_videos to get the title
+        for video_id in channel_videos:
+            data = self.get_channel_title(video_id, 'snippet')
+            # Append the returned data (In this case, the title string)
+            name.append(data)
+        self.channel_name = name[0]
+        return name[0]
+
+    def get_channel_video_title(self) -> list:
         # Function to get the title of from the json data
         title = []
         # Get the json data through _get_channel_videos function
-        channel_videos = self._get_channel_videos(limit=5)
+        channel_videos = self.get_channel_videos(limit=5)
 
         # We loop through to channel_videos to get the title
         for video_id in channel_videos:
-            # Call the _get_single_video_title function to get the title
-            data = self._get_single_video_title(video_id, 'snippet')
+            data = self.get_single_video_title(video_id, 'snippet')
             # Append the returned data (In this case, the title string)
             title.append(data)
         # print(title)
         # Assign the list to the video_data object
         self.video_title = title
         return title
+
+    def get_single_video_title(self, video_id, part):
+        url = f'https://www.googleapis.com/youtube/v3/videos?part={part}&id={video_id}&key={self.api_key}'
+
+        json_url = requests.get(url)
+        data = json.loads(json_url.text)
+        # print(data)
+        try:
+            data = data['items'][0]['snippet']['title']
+        except:
+            print('Error')
+            data = dict()
+        return data
 
     def filter_name(self, song_name):
         # Function to filter the name of the song using REGEX
@@ -97,20 +138,7 @@ class YT_stats:
         song_name = self.filter_name(song_name)
         return artist, song_name
 
-    def _get_single_video_title(self, video_id, part):
-        url = f'https://www.googleapis.com/youtube/v3/videos?part={part}&id={video_id}&key={self.api_key}'
-
-        json_url = requests.get(url)
-        data = json.loads(json_url.text)
-        # print(data)
-        try:
-            data = data['items'][0]['snippet']['title']
-        except:
-            print('Error')
-            data = dict()
-        return data
-
-    def _get_channel_videos(self, limit = None):
+    def get_channel_videos(self, limit = None):
 
         # Function to get the n most recent videos of the given channel
 
@@ -124,7 +152,7 @@ class YT_stats:
         # This block is primarily use for if you have 50+ returned results
         # Which would result in the data being stored on multiple json pages
         # We call our per page helper function and pass through the url
-        vid, npt = self._get_channel_videos_per_page(url)
+        vid, npt = self.get_channel_videos_per_page(url)
         # index variable
         i = 0
         # While loop to run through the number of next pages available
@@ -134,7 +162,7 @@ class YT_stats:
             # We append the page token query into the url
             next_url = url + '&pageToken=' + npt
             # Pass it to the per page helper function
-            next_vid, npt = self._get_channel_videos_per_page(next_url)
+            next_vid, npt = self.get_channel_videos_per_page(next_url)
             # Update the dictionary if the key does not exists in it
             vid.update(next_vid)
             # Increment our index
@@ -142,7 +170,7 @@ class YT_stats:
 
         return vid
 
-    def _get_channel_videos_per_page(self, url):
+    def get_channel_videos_per_page(self, url):
 
         # This function is only useful if your desired max result is over 50,
         # which the returned results will be stored into multiple pages
