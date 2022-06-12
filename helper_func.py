@@ -10,7 +10,7 @@ class inputValidation(object):
             print('Invalid choice, please only enter (Y/N)')
     
     # Function to validate user's input regarding if they want their playlist public (or not)
-    def public_input_validation():
+    def public_input_validation() -> str:
         while True:
             playListPublic = input('Make playlist public? (Y/N): ')
             if playListPublic in ['y', 'Y', 'n' , 'N']:
@@ -24,8 +24,8 @@ class genreator_print(object):
         pass
 
     def print_welcome(left_w, right_w):
-        print('WELCOME TO GENREATOR'.center(left_w + right_w, '-'), "\n")
-        print("Genreator is a program that allows you\nto transfer a youtube playlist or video\nfrom a channel to your spotify playlist.\n")
+        print('WELCOME TO GENREATOR'.center(left_w + right_w, '-'), '\n')
+        print('Genreator is a program that allows you\nto transfer a youtube playlist or video\nfrom a channel to your spotify playlist.\n')
         print('-'.center(left_w + right_w, '-'))
 
     def print_menu(menuItem, left_w, right_w):
@@ -33,9 +33,10 @@ class genreator_print(object):
         for k, v in menuItem.items():
             print(k.ljust(left_w, '.') +str(v).rjust(right_w))
     
-    def print_list(input_list):
+    def print_list(input_list, channelName, left_w, right_w):
+        print(f'Returned Items From {channelName}'.center(left_w + right_w, '-'), '\n')
         for i in range(len(input_list)):
             if (i < 10):
-                print('0', i, '. ', input_list[i])
+                print('0' + str(i+1) + '. ' + input_list[i])
             else:
-                print(i, '. ', input_list[i])
+                print(str(i) + '. ' + input_list[i])

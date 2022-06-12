@@ -4,12 +4,10 @@ from turtle import left
 from YT_client import YT_stats
 from secret_data import clientId, clientSec, YT_API_KEY, channelID
 from spotify_client import SpotifyClient
-from print import genreator_print
+from helper_func import genreator_print
 from helper_func import inputValidation
 
-
-# Function to validate user's input regarding if they want their playlist public (or not)
-yt = YT_stats(YT_API_KEY, channelID)
+# yt = YT_stats(YT_API_KEY, channelID)
 
 def main():
     menuItem = {'Description': '01',
@@ -37,19 +35,26 @@ def main():
             elif (menu_input == '02'):
                 # print('Transfering from Youtube...')
                 channel_id = input("Enter the channel ID: ")
+
+                yt = YT_stats(YT_API_KEY, channel_id)
                 yt.get_channel_id(channel_id)
+                yt.get_channel_stats()
+                channel_name = yt.get_channel_name()
+                print('Extracting song info from', channel_name)
+                title_list = yt.get_channel_video_title()
+                filtered_title = yt.filter_name(title_list)
+                genreator_print.print_list(filtered_title, channel_name, 31, 8)
+                
+                createPlaylist_YN = input('Make a new playlist to store the returned items?(Y/N): ')
+                
+                if inputValidation.YN_validation(createPlaylist_YN) == True:
+                    spfy.create_playlist()
+                else:
+                    print('Adding to most recent')
+                # yt.get_channel_id(channel_id)
 
             elif(menu_input == '03'):
-                # Get all the necessary input for create playlist parameters
-                playlistName = input('Name your playlist: ')
-                playlistDesc = input('Describe your playlist: ')
-                publicValidation = False
-                returnedInput = inputValidation.public_input_validation()
-                if returnedInput == 'Y':
-                    publicValidation = True
-
-                spfy.create_playlist(user_ID, playlistName, playlistDesc, publicValidation, playlistDesc)
-                print('creating a playlist...')
+                pass
             else:
                 print('Quiting program. Goodbye!')
                 break
