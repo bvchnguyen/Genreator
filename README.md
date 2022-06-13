@@ -25,7 +25,7 @@ MAKE SURE YOU ADD THIS FILE TO YOUR .gitignore to prevent it from being push to 
 
 Genre-ator will first ask you for your spotify username -- It'll then go through a validation to make sure such user exists on spotify so that it's able to obtain information and add to playlist accordingly.
 
-![](/screenshots/welcome.png)
+![](/screenshots/welcome2.png)
 
 To obtain a channel ID, go to a page that you would like, for demonstration purposes, I will choose the music library channel MrSuicideSheep.
 
