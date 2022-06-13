@@ -6,16 +6,17 @@ import spotipy
 import spotipy.util as util
 import requests
 import urllib.parse
+import pprint
 import json
 
 # Spotipy documentation -- https://spotipy.readthedocs.io/en/2.19.0/#
 
 class SpotifyClient(object):
 
-    def __init__(self, clientId, clientSec, userID):
+    def __init__(self, clientId, clientSec):
         self.client_ID = clientId
         self.client_Secret = clientSec
-        self.user_id = userID
+        self.user_id = None
         self.spotipy_lib = None
 
     def spfy_spotipy(self):
@@ -25,31 +26,29 @@ class SpotifyClient(object):
         self.spotipy_lib = spotify
         return spotify
         
-    def user_validation(self, user_name) -> None:
+    def user_validation(self, user_name) -> bool:
         try:
             self.spfy_spotipy().user(user_name)
             print(f'Access granted: Welcome {user_name}')
+            self.user_id = user_name
+            return True
+        # Have to fix exception catch
         except:
             print(f'No user found under the name {user_name}')
-        return
+        return False
 
-    def search_spotify(self, artist_list, title_list):
+    def search_track_spotify(self, artist_list, title_list) -> list:
         # Function to search spotify using spotipy by using the artist and title list that we've returned in YT_client
-        
-        # Initalizing and verifying our spotify credentials
-        # May move this to _init_, but for now, keeping this here for further testing
-        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
-            client_id=clientId, client_secret=clientSec
-        ))
-        # Loop through our artist & Title list
+        found_track = []
         for i in range(len(artist_list)):
             artist = artist_list[i]
             track_name = title_list[i]
             # Call the spotipy search function and pass through the given parameters
-            # For our case, we want just the top result found when searching, thus, limit = 1
-            # Result will return with json data regarding what's found
-            results = spotify.search(q='artist:' + artist + ' track:' + track_name, limit=1, type='track')
-            print(results)
+            results = self.spfy_spotipy().search(q='artist:' + artist + ' track:' + track_name, limit=1, type='track')
+            if ((results['tracks']['total']) != 0):
+                track = results['tracks']['items'][0]['artists'][0]['name'] + ' - ' + results['tracks']['items'][0]['name']
+                found_track.append(track)
+        return found_track
 
     def create_playlist(self, user_id):
         # Function to create a playlist based on user's input
@@ -62,36 +61,6 @@ class SpotifyClient(object):
 
         spotipy.user_playlist_create(user = user_id, name = playlistName, public=publicValidation, 
                                     collaborative=False, description=playlistDesc)
-
-    def search_song(self, artist, track):
-        # Function to search the song by the artist and name
-        query = urllib.parse.quote (f'{artist} {track}')
-        # https://api.spotify.com/v1/search?query=track%3A{}+artist%3A{}&type=track&offset=0&limit=20
-        url_query = f'https://api.spotify.com/v1/search?q={query}&type=track'
-        response = requests.get(
-            url_query,
-            headers={
-                "Content-type": "application/json",
-                "Authorization": f'Bearer {self.api_token}'
-            }
-        )
-        response_json = response.json()
-        results = response_json['track']['items']
-        if results:
-            return results[0]['id']
-        else:
-            raise Exception(f'No song found under this {artist}')
     
     def add_song_to_playlist(self, song_id):
-        url = 'https://api.spotify.com/v1/me/tracks'
-        response = requests.put(
-            url,
-            json={
-                "ids": [song_id]
-            },
-            headers={
-                "Content-type": "application/json",
-                "Authorization": f'Bearer {self.api_token}'
-            }
-        )
-        return response.ok
+        pass
