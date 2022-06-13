@@ -3,12 +3,14 @@ class inputValidation(object):
     def __init__(self) -> None:
         pass
     # Function to validate user's input Y/N
-    def YN_validation(YN_inp):
+    def YN_validation(YN_inp) -> bool:
         while True:
             if YN_inp in ['y', 'Y', 'n' , 'N']:
-                break
-            print('Invalid choice, please only enter (Y/N)')
-    
+                return True
+            else:
+                print('Invalid choice, please only enter (Y/N)')
+        return False
+
     # Function to validate user's input regarding if they want their playlist public (or not)
     def public_input_validation() -> str:
         while True:
@@ -34,9 +36,9 @@ class genreator_print(object):
             print(k.ljust(left_w, '.') +str(v).rjust(right_w))
     
     def print_list(input_list, channelName, left_w, right_w):
-        print(f'Returned Items From {channelName}'.center(left_w + right_w, '-'), '\n')
+        print(f'FOUND TRACKS FROM {channelName}'.center(left_w + right_w, '-'))
         for i in range(len(input_list)):
-            if (i < 10):
+            if (i < 9):
                 print('0' + str(i+1) + '. ' + input_list[i])
             else:
                 print(str(i) + '. ' + input_list[i])
