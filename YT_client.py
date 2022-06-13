@@ -29,15 +29,9 @@ class YT_stats(object):
         # Get the URL from google API and pass it as an f string to URL variable
         # We passed in the channel_ID and api_key in the query slots
         url = f'https://www.googleapis.com/youtube/v3/channels?part=statistics&id={self.channel_id}&key={self.api_key}'
-        
         # pass a requests to the URL declared
         json_url = requests.get(url)
-
-        # Load the json data as a text file
         data = json.loads(json_url.text)
-        # Grabing the first item in the items list of our loaded json file
-        # Then grab the "statistics" value of that first item
-        # print(data)
         try:
             data = data['items'][0]['statistics']
         
@@ -55,7 +49,6 @@ class YT_stats(object):
 
         json_url = requests.get(url)
         data = json.loads(json_url.text)
-        # print(data)
         try:
             data = data['items'][0]['snippet']['channelTitle']
         except:
@@ -105,7 +98,7 @@ class YT_stats(object):
             data = dict()
         return data
 
-    def filter_name(self, song_name):
+    def filter_name(self, song_name) -> list:
         # Function to filter the name of the song using REGEX
         # If the name includes things such as (lyrics), (official music video), etc
         # This helps filter the name so that it's easier to search in spotify
@@ -116,7 +109,7 @@ class YT_stats(object):
             updated_name.append(temp)
         return updated_name
 
-    def split_title(self, title_list):
+    def split_title(self, title_list) -> list:
         # Function to split the title between the artist and song
         # In most format on youtube, the title consists of Artist - Song Name
         # Here, we will consider the featuring artist to be a part of the song name for simplicity
@@ -127,7 +120,7 @@ class YT_stats(object):
             # Loop through each title string
             for i in range(len(title)):
                 # Once we find the delimiter "-", we can slice the string into two
-                if title[i] == '=':
+                if title[i] == '-':
                     # Artist is anything before the delimiter
                     str_artist = title[0:i-1]
                     # Song title is anything after the delimiter
