@@ -1,6 +1,6 @@
 from cgitb import reset
-from spotipy.oauth2 import SpotifyClientCredentials
-from secret_data import clientId, clientSec
+from secret_data import clientId, clientSec, redirect
+from spotipy.oauth2 import SpotifyOAuth
 from helper_func import inputValidation
 import spotipy
 import spotipy.util as util
@@ -20,11 +20,19 @@ class SpotifyClient(object):
         self.spotipy_lib = None
 
     def spfy_spotipy(self):
-        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
-                               client_id=clientId, client_secret=clientSec))
+        spOAuth_ob = spotipy.SpotifyOAuth(client_id=clientId,
+                                        client_secret=clientSec,
+                                        redirect_uri=redirect,
+                                        scope='playlist-modify-public')
 
-        self.spotipy_lib = spotify
-        return spotify
+        token_data = spOAuth_ob.get_access_token()
+        token = token_data['access_token']
+
+        spotipy_ob = spotipy.Spotify(auth=token)
+        self.spotipy_lib = spotipy_ob
+        return spotipy_ob
+        # spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+        #                        client_id=clientId, client_secret=clientSec))
         
     def user_validation(self, user_name) -> bool:
         try:
@@ -54,12 +62,8 @@ class SpotifyClient(object):
         # Function to create a playlist based on user's input
         playlistName = input('Name your playlist: ')
         playlistDesc = input('Describe your playlist: ')
-        publicValidation = False
-        returnedInput = inputValidation.public_input_validation()
-        if returnedInput == 'Y':
-            publicValidation = True
 
-        spotipy.user_playlist_create(user = user_id, name = playlistName, public=publicValidation, 
+        self.spfy_spotipy().user_playlist_create(user = user_id, name = playlistName, public=True, 
                                     collaborative=False, description=playlistDesc)
     
     def add_song_to_playlist(self, song_id):
