@@ -36,9 +36,10 @@ class genreator_print(object):
             print(k.ljust(left_w, '.') +str(v).rjust(right_w))
     
     def print_list(input_list, channelName, left_w, right_w):
-        print(f'FOUND TRACKS FROM {channelName}'.center(left_w + right_w, '-'))
+        print('FOUND TRACKS'.center(left_w + right_w, '-'))
+        # print(f'FOUND TRACKS FROM {channelName}'.center(left_w + right_w, '-'))
         for i in range(len(input_list)):
             if (i < 9):
                 print('0' + str(i+1) + '. ' + input_list[i])
             else:
-                print(str(i) + '. ' + input_list[i])
+                print(str(i+1) + '. ' + input_list[i])

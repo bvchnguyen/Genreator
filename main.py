@@ -2,7 +2,7 @@ from pprint import pprint
 from pydoc import describe
 from turtle import left
 from YT_client import YT_stats
-from secret_data import clientId, clientSec, YT_API_KEY, channelID
+from secret_data import clientId, clientSec, YT_API_KEY, channelID, redirect
 from spotify_client import SpotifyClient
 from helper_func import genreator_print
 from helper_func import inputValidation
@@ -41,14 +41,14 @@ def main():
                 yt.get_channel_id(channel_id)
                 yt.get_channel_stats()
                 channel_name = yt.get_channel_name()
-                print('Extracting song info from', channel_name)
+                print('Extracting songs from', channel_name + '...')
                 title_list = yt.get_channel_video_title()
                 filtered_title = yt.filter_name(title_list)
                 genreator_print.print_list(filtered_title, channel_name, 31, 8)                
-                createPlaylist_YN = input('Make a new playlist to store the returned items?(Y/N): ')
+                createPlaylist_YN = input('\nMake a new playlist to store the returned items?(Y/N): ')
                 
                 if inputValidation.YN_validation(createPlaylist_YN) == True:
-                    spfy.create_playlist()
+                    spfy.create_playlist(user_ID)
                 else:
                     print('Adding to most recent')
                 # yt.get_channel_id(channel_id)
