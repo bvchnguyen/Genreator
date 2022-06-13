@@ -23,14 +23,21 @@ MAKE SURE YOU ADD THIS FILE TO YOUR .gitignore to prevent it from being push to 
 
 ## Instructions:
 
-To obtain a channel ID, go to a page that you would like, for demonstration purposes, I will choose Chelsea Cutler's youtube page.
+Genre-ator will first ask you for your spotify username -- It'll then go through a validation to make sure such user exists on spotify so that it's able to obtain information and add to playlist accordingly.
 
-* Navigating to her page, we obtain a link -- https://www.youtube.com/channel/UCL7hBIFFV1RAkmyvoXdyzjg
-* The channel ID then be 'UCL7hBIFFV1RAkmyvoXdyzjg'.
+![](/screenshots/welcome.png)
+
+To obtain a channel ID, go to a page that you would like, for demonstration purposes, I will choose the music library channel MrSuicideSheep.
+
+* Navigating to their page, we obtain a link -- https://www.youtube.com/channel/UC5nc_ZtjKW1htCVZVRxlQAQ
+* The channel ID then be 'UC5nc_ZtjKW1htCVZVRxlQAQ'.
 * Enter this when choosing option '02' in the main menu.
 * Then the program will extract up to n amount of videos from the channel, where n is the determined limit.
 * The program will then search through spotify and add it to an existing playlist
-* NOTE that a lot of YouTube's music are bootlegs, unofficial, or some artist are not on spotify yet. This means that the search is not perfect. I would recommend trying to find a playlist or channel that uploads official music.
+* NOTE that a lot of YouTube's music are bootlegs, unofficial, or some artists are not on spotify yet. This means that the search is not perfect.
+* Genre-ator has a name filter implemented to streamline the search. This means that if there exists an official version of the song on spotify, Genre-ator will search for that, BUT NOT the remix/bootleg version. I would recommend trying to find a playlist or channel that has official music.
+
+![](/screenshots/extraction.png)
 
 ## Goals (for future implementation):
 * Finish create a playlist option
