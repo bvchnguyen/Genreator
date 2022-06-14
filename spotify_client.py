@@ -18,6 +18,7 @@ class SpotifyClient(object):
         self.client_Secret = clientSec
         self.user_id = None
         self.spotipy_lib = None
+        self.track_uri = None
 
     def spfy_spotipy(self):
         spOAuth_ob = spotipy.SpotifyOAuth(client_id=clientId,
@@ -47,7 +48,8 @@ class SpotifyClient(object):
 
     def search_track_spotify(self, artist_list, title_list) -> list:
         # Function to search spotify using spotipy by using the artist and title list that we've returned in YT_client
-        found_track = []
+        found_track = [] # for display
+        track_uri_list = [] # for adding via spotipy
         for i in range(len(artist_list)):
             artist = artist_list[i]
             track_name = title_list[i]
@@ -55,16 +57,24 @@ class SpotifyClient(object):
             results = self.spfy_spotipy().search(q='artist:' + artist + ' track:' + track_name, limit=1, type='track')
             if ((results['tracks']['total']) != 0):
                 track = results['tracks']['items'][0]['artists'][0]['name'] + ' - ' + results['tracks']['items'][0]['name']
+                song_uri = results['tracks']['items'][0]['uri']
                 found_track.append(track)
-        return found_track
+                track_uri_list.append(song_uri)
+        return found_track, track_uri_list
 
-    def create_playlist(self, user_id):
+    def create_playlist(self, user_id) -> str:
         # Function to create a playlist based on user's input
         playlistName = input('Name your playlist: ')
         playlistDesc = input('Describe your playlist: ')
 
-        self.spfy_spotipy().user_playlist_create(user = user_id, name = playlistName, public=True, 
+        playlist = self.spfy_spotipy().user_playlist_create(user = user_id, name = playlistName, public=True, 
                                     collaborative=False, description=playlistDesc)
-    
-    def add_song_to_playlist(self, song_id):
-        pass
+
+        return playlist['id']
+
+    def add_song_to_playlist(self, ID, playlistID, track_uri):
+        self.spfy_spotipy().user_playlist_add_tracks(user = ID, 
+                                                    playlist_id = playlistID, 
+                                                    tracks = track_uri, 
+                                                    position=None)
+        
