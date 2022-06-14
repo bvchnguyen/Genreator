@@ -37,9 +37,18 @@ To obtain a channel ID, go to a page that you would like, for demonstration purp
 * NOTE that a lot of YouTube's music are bootlegs, unofficial, or some artists are not on spotify yet. This means that the search is not perfect.
 * Genre-ator has a name filter implemented to streamline the search. This means that if there exists an official version of the song on spotify, Genre-ator will search for that, BUT NOT the remix/bootleg version. I would recommend trying to find a playlist or channel that has official music.
 
-![](/screenshots/extraction.png)
+![](/screenshots/extraction_testing.png)
 
-## Goals (for future implementation):
-* Finish create a playlist option
-* Add generated songs to that particular playlist
-* Implement a more streamline channel search (instead of having users manually search for the ID or convert to an ID)
+* Genre-ator will then for you to create a playlist put the returned list of songs in:
+
+![](/screenshots/playlist.png)
+
+* Upon validation, it'll add list of found songs into the playlist we just created:
+
+![](/screenshots/spfy_sc.png)
+
+## Goals:
+* Finish create a playlist option :white_check_mark:
+* Add generated songs to that particular playlist :white_check_mark:
+* Implement a more streamline channel search (instead of having users manually search for the ID or convert to an ID) :o:
+* 
