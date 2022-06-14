@@ -43,12 +43,13 @@ To obtain a channel ID, go to a page that you would like, for demonstration purp
 
 ![](/screenshots/playlist.png)
 
-* Upon validation, it'll add list of found songs into the playlist we just created:
+* Upon validation, it'll the add list of found songs into the playlist we just created:
 
 ![](/screenshots/spfy_sc.png)
 
 ## Goals:
-* Finish create a playlist option :white_check_mark:
-* Add generated songs to that particular playlist :white_check_mark:
-* Implement a more streamline channel search (instead of having users manually search for the ID or convert to an ID) :o:
-* 
+:white_check_mark: Finish create a playlist option 
+:white_check_mark: Add generated songs to that particular playlist 
+:o: Implement a more streamline channel search (instead of having users manually search for the ID or convert to an ID) 
+:o: Implement auto generate function for playlist
+:o: Implement add to existing playlist function
