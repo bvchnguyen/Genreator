@@ -4,10 +4,7 @@ from turtle import left
 from YT_client import YT_stats
 from secret_data import clientId, clientSec, YT_API_KEY, channelID, redirect
 from spotify_client import SpotifyClient
-from helper_func import genreator_print
-from helper_func import inputValidation
-
-# yt = YT_stats(YT_API_KEY, channelID)
+from helper_func import genreator_print, inputValidation
 
 def main():
     menuItem = {'Description': '01',
@@ -44,14 +41,17 @@ def main():
                 print('Extracting songs from', channel_name + '...')
                 title_list = yt.get_channel_video_title()
                 filtered_title = yt.filter_name(title_list)
-                genreator_print.print_list(filtered_title, channel_name, 31, 8)                
+                artist, track = yt.split_title(filtered_title)
+                found_song_list, song_uri = spfy.search_track_spotify(artist, track)
+                genreator_print.print_list(found_song_list, channel_name, 31, 8)               
                 createPlaylist_YN = input('\nMake a new playlist to store the returned items?(Y/N): ')
-                
+
                 if inputValidation.YN_validation(createPlaylist_YN) == True:
-                    spfy.create_playlist(user_ID)
+                    playlist_id = spfy.create_playlist(user_ID)
+                    spfy.add_song_to_playlist(user_ID, playlist_id, song_uri)
                 else:
                     print('Adding to most recent')
-                # yt.get_channel_id(channel_id)
+                yt.get_channel_id(channel_id)
 
             elif(menu_input == '03'):
                 pass
