@@ -5,8 +5,10 @@ class inputValidation(object):
     # Function to validate user's input Y/N
     def YN_validation(YN_inp) -> bool:
         while True:
-            if YN_inp in ['y', 'Y', 'n' , 'N']:
+            if YN_inp in ['y', 'Y']:
                 return True
+            elif YN_inp in ['n', 'N']:
+                return False
             else:
                 print('Invalid choice, please only enter (Y/N)')
         return False

@@ -9,8 +9,7 @@ from helper_func import genreator_print, inputValidation
 def main():
     menuItem = {'Description': '01',
                 'Transfer From Youtube': '02',
-                'Create a playlist': '03' ,
-                'Quit Program': '04'}
+                'Quit Program': '03'}
 
     genreator_print.print_welcome(31,8)
 
@@ -34,9 +33,8 @@ def main():
                 channel_id = input('Enter the channel ID: ')
 
                 # Encapsulate this into a function
-                yt = YT_stats(YT_API_KEY, channel_id)
-                yt.get_channel_id(channel_id)
-                yt.get_channel_stats()
+                yt = YT_stats(YT_API_KEY)
+                yt.set_channel_id(channel_id)
                 channel_name = yt.get_channel_name()
                 print('Extracting songs from', channel_name + '...')
                 title_list = yt.get_channel_video_title()
@@ -50,12 +48,10 @@ def main():
                     playlist_id = spfy.create_playlist(user_ID)
                     spfy.add_song_to_playlist(user_ID, playlist_id, song_uri)
                 else:
-                    print('Adding to most recent')
-                yt.get_channel_id(channel_id)
+                    playlist_name = channel_name + ' Youtube Transfer'
+                    spfy.generate_playlist(playlist_name, user_ID, song_uri)
 
-            elif(menu_input == '03'):
-                pass
-            else:
+            elif (menu_input == '03'):
                 print('Quiting program. Goodbye!')
                 break
         else:
