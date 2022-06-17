@@ -10,39 +10,18 @@ import re
 
 class YT_stats(object):
     
-    def __init__(self, api_key, channel_id):
+    def __init__(self, api_key) -> None:
         self.api_key = api_key
-        self.channel_id = channel_id
+        self.channel_id = None
         self.channel_statistics = None
         self.channel_name = None
         self.video_data = None
         self.video_title = None
 
-    def get_channel_id(self, input):
-        # Function to get channel ID from user's input and store
-        # It as a class object
+    def set_channel_id(self, input):
+        # Function to set channel ID
         self.channel_id = input
         return self.channel_id
-
-    def get_channel_stats(self):
-
-        # Get the URL from google API and pass it as an f string to URL variable
-        # We passed in the channel_ID and api_key in the query slots
-        url = f'https://www.googleapis.com/youtube/v3/channels?part=statistics&id={self.channel_id}&key={self.api_key}'
-        # pass a requests to the URL declared
-        json_url = requests.get(url)
-        data = json.loads(json_url.text)
-        try:
-            data = data['items'][0]['statistics']
-        
-        # If failed to load, return None
-        except KeyError:
-            data = None
-        
-        # Assign our channel_statistics object to the data found
-        self.channel_statistics = data
-        # print(self.channel_statistics)
-        return data
 
     def get_channel_title(self, video_id, part) -> dict:
         url = f'https://www.googleapis.com/youtube/v3/videos?part={part}&id={video_id}&key={self.api_key}'
@@ -52,7 +31,7 @@ class YT_stats(object):
         try:
             data = data['items'][0]['snippet']['channelTitle']
         except:
-            print('Error')
+            print('No such data exists')
             data = dict()
         # print(data)
         return data
@@ -85,7 +64,7 @@ class YT_stats(object):
         self.video_title = title
         return title
 
-    def get_single_video_title(self, video_id, part):
+    def get_single_video_title(self, video_id, part) -> dict:
         url = f'https://www.googleapis.com/youtube/v3/videos?part={part}&id={video_id}&key={self.api_key}'
 
         json_url = requests.get(url)
@@ -131,7 +110,7 @@ class YT_stats(object):
         song_name = self.filter_name(song_name)
         return artist, song_name
 
-    def get_channel_videos(self, limit = None):
+    def get_channel_videos(self, limit = None) -> dict:
 
         # Function to get the n most recent videos of the given channel
 
@@ -163,7 +142,7 @@ class YT_stats(object):
 
         return vid
 
-    def get_channel_videos_per_page(self, url):
+    def get_channel_videos_per_page(self, url) -> dict:
 
         # This function is only useful if your desired max result is over 50,
         # which the returned results will be stored into multiple pages
@@ -190,28 +169,3 @@ class YT_stats(object):
                 print('No video found.')
         
         return channel_videos, nextPageToken
-
-    def dump(self):
-        # Function to dump the json data onto a json file in local directory
-        # Create a json file in our directory so we don't have to open it as a link
-
-        # If get_channel_stats returned channel_statistics object as none, we exit function
-        if self.channel_statistics is None or self.video_data is None:
-            print('No data is found')
-            return
-            
-        fused_data = {self.channel_id: {'channel_statistics': self.channel_statistics,
-                                        'video_data': self.video_data}}
-
-        channel_title = self.video_data.popitem()[1].get('channelTitle', self.channel_id)
-        # channel_title = "Trap City"
-
-        # Replace any whitespace in filename with underscore (and lowercase it)
-        channel_title = channel_title.replace(' ', '_').lower()
-
-        # Assign the file as a json file
-        file_name = channel_title + '.json'
-        
-        # Open the file as write-able
-        with open(file_name, 'w') as f:
-            json.dump(fused_data, f, indent = 4)

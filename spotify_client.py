@@ -1,7 +1,8 @@
 from cgitb import reset
-from secret_data import clientId, clientSec, redirect
+from secret_data import clientId, clientSec, redirect, YT_API_KEY
 from spotipy.oauth2 import SpotifyOAuth
 from helper_func import inputValidation
+from YT_client import YT_stats
 import spotipy
 import spotipy.util as util
 import requests
@@ -72,8 +73,33 @@ class SpotifyClient(object):
 
         return playlist['id']
 
+    def get_user_playlist(self):
+        user_playlists = self.spfy_spotipy().current_user_playlists(limit=15, offset=0)
+        print(user_playlists)
+
+    def generate_playlist(self, playlistName, user_id, track_uri):
+        
+        user_playlists = self.spfy_spotipy().current_user_playlists(limit=15, offset=0)
+    
+        yt = YT_stats(YT_API_KEY)
+
+        if playlistName in user_playlists:
+            self.spfy_spotipy().user_playlist_add_tracks(user = user_id, 
+                                            playlist_id = playlist['items'][0]['id'], 
+                                            tracks = track_uri, 
+                                            position=None)
+            return
+        else:
+            playlist = self.spfy_spotipy().user_playlist_create(user = user_id, name = playlistName, public=True, 
+                                        collaborative=False, description='Transfered from Youtube')
+            
+            self.spfy_spotipy().user_playlist_add_tracks(user = user_id, 
+                                                        playlist_id = playlist['id'], 
+                                                        tracks = track_uri, 
+                                                        position=None)
+
     def add_song_to_playlist(self, ID, playlistID, track_uri):
-        self.spfy_spotipy().user_playlist_add_tracks(user = ID, 
+        added = self.spfy_spotipy().user_playlist_add_tracks(user = ID, 
                                                     playlist_id = playlistID, 
                                                     tracks = track_uri, 
                                                     position=None)
