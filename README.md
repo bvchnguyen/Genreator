@@ -1,7 +1,6 @@
 # Genre-ator
 
-A python script that extracts a playlist or a series of videos from a youtube channel, search for each song in spotify
-and add them to a playlist either by genre or by user's choice.
+A python script that extracts a playlist or a series of videos from a youtube channel, search for each song in spotify, and add the found tracks to an auto-generated playlist to the user's spotify profile.
 
 ## Technologies & Documentation:
 * Python
@@ -45,6 +44,8 @@ Finish create a playlist option. :white_check_mark:
 Add generated songs to that particular playlist. 
 
 Implement auto generate function for playlist. :white_check_mark:
+
+Implement a playlist filter to remove multiple occurences of a song :o:
 
 Implement a more streamline channel search (instead of having users manually search for the ID or convert to an ID). :o: 
 

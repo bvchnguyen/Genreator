@@ -4,22 +4,27 @@ class inputValidation(object):
         pass
     # Function to validate user's input Y/N
     def YN_validation(YN_inp) -> bool:
+        validation = True
         while True:
             if YN_inp in ['y', 'Y']:
-                return True
+                validation = True
             elif YN_inp in ['n', 'N']:
-                return False
+                validation = False
             else:
                 print('Invalid choice, please only enter (Y/N)')
+                validation = False
         return False
 
     # Function to validate user's input regarding if they want their playlist public (or not)
-    def public_input_validation() -> str:
+    def generate_input_validation() -> str:
         while True:
-            playListPublic = input('Make playlist public? (Y/N): ')
+            playListPublic = input('Generate a playlist?(Y/N):')
             if playListPublic in ['y', 'Y', 'n' , 'N']:
-                break
-            print('Invalid choice, please only enter (Y/N)')
+                if playListPublic in ['y', 'Y']:
+                    return True
+                elif playListPublic in ['n', 'N']:
+                    return False
+            print('Invalid choice, please only enter Y or N.')
         return playListPublic
 
 # Class for pretty printing
@@ -45,3 +50,4 @@ class genreator_print(object):
                 print('0' + str(i+1) + '. ' + input_list[i])
             else:
                 print(str(i+1) + '. ' + input_list[i])
+        print('-'.center(left_w + right_w, '-'))
