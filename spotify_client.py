@@ -33,8 +33,6 @@ class SpotifyClient(object):
         spotipy_ob = spotipy.Spotify(auth=token)
         self.spotipy_lib = spotipy_ob
         return spotipy_ob
-        # spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
-        #                        client_id=clientId, client_secret=clientSec))
         
     def user_validation(self, user_name) -> bool:
         try:
@@ -63,7 +61,7 @@ class SpotifyClient(object):
                 track_uri_list.append(song_uri)
         return found_track, track_uri_list
 
-    def create_playlist(self, user_id) -> str:
+    def create_playlist(self, user_id, track_uri) -> str:
         # Function to create a playlist based on user's input
         playlistName = input('Name your playlist: ')
         playlistDesc = input('Describe your playlist: ')
@@ -71,24 +69,23 @@ class SpotifyClient(object):
         playlist = self.spfy_spotipy().user_playlist_create(user = user_id, name = playlistName, public=True, 
                                     collaborative=False, description=playlistDesc)
 
-        return playlist['id']
+        self.spfy_spotipy().user_playlist_add_tracks(user = user_id, 
+                                                    playlist_id = playlist['id'], 
+                                                    tracks = track_uri, 
+                                                    position=None)
 
-    def get_user_playlist(self):
-        user_playlists = self.spfy_spotipy().current_user_playlists(limit=15, offset=0)
-        print(user_playlists)
-
-    def generate_playlist(self, playlistName, user_id, track_uri):
+    def generate_playlist(self, playlistName, user_id, track_uri) -> None:
         
-        user_playlists = self.spfy_spotipy().current_user_playlists(limit=15, offset=0)
-    
         yt = YT_stats(YT_API_KEY)
-
-        if playlistName in user_playlists:
+        user_playlists = self.spfy_spotipy().current_user_playlists(limit=15, offset=0)
+        # If such playlist exists
+        if playlistName in user_playlists['items'][0]['name']:
             self.spfy_spotipy().user_playlist_add_tracks(user = user_id, 
-                                            playlist_id = playlist['items'][0]['id'], 
-                                            tracks = track_uri, 
-                                            position=None)
+                                                        playlist_id = playlist['items'][0]['id'], 
+                                                        tracks = track_uri, 
+                                                        position=None)
             return
+        # If no playlist exists under that name
         else:
             playlist = self.spfy_spotipy().user_playlist_create(user = user_id, name = playlistName, public=True, 
                                         collaborative=False, description='Transfered from Youtube')
@@ -97,10 +94,4 @@ class SpotifyClient(object):
                                                         playlist_id = playlist['id'], 
                                                         tracks = track_uri, 
                                                         position=None)
-
-    def add_song_to_playlist(self, ID, playlistID, track_uri):
-        added = self.spfy_spotipy().user_playlist_add_tracks(user = ID, 
-                                                    playlist_id = playlistID, 
-                                                    tracks = track_uri, 
-                                                    position=None)
         

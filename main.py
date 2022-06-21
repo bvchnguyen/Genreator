@@ -7,6 +7,9 @@ from spotify_client import SpotifyClient
 from helper_func import genreator_print, inputValidation
 
 def main():
+
+    yt = YT_stats(YT_API_KEY)
+
     menuItem = {'Description': '01',
                 'Transfer From Youtube': '02',
                 'Quit Program': '03'}
@@ -29,11 +32,8 @@ def main():
                 # print description
 
             elif (menu_input == '02'):
-                # print('Transfering from Youtube...')
                 channel_id = input('Enter the channel ID: ')
-
                 # Encapsulate this into a function
-                yt = YT_stats(YT_API_KEY)
                 yt.set_channel_id(channel_id)
                 channel_name = yt.get_channel_name()
                 print('Extracting songs from', channel_name + '...')
@@ -42,15 +42,12 @@ def main():
                 artist, track = yt.split_title(filtered_title)
                 found_song_list, song_uri = spfy.search_track_spotify(artist, track)
                 genreator_print.print_list(found_song_list, channel_name, 31, 8)               
-                createPlaylist_YN = input('\nMake a new playlist to store the returned items?(Y/N): ')
 
-                if inputValidation.YN_validation(createPlaylist_YN) == True:
-                    playlist_id = spfy.create_playlist(user_ID)
-                    spfy.add_song_to_playlist(user_ID, playlist_id, song_uri)
-                else:
+                if inputValidation.generate_input_validation() == True:
                     playlist_name = channel_name + ' Youtube Transfer'
                     spfy.generate_playlist(playlist_name, user_ID, song_uri)
-
+                else:
+                    playlist_id = spfy.create_playlist(user_ID, song_uri)
             elif (menu_input == '03'):
                 print('Quiting program. Goodbye!')
                 break
