@@ -45,7 +45,8 @@ def main():
 
                 if inputValidation.generate_input_validation() == True:
                     playlist_name = channel_name + ' Youtube Transfer'
-                    spfy.generate_playlist(playlist_name, user_ID, song_uri)
+                    playlist_link = spfy.generate_playlist(playlist_name, user_ID, song_uri)
+                    print('Playlist generated:', playlist_link)
                 else:
                     playlist_id = spfy.create_playlist(user_ID, song_uri)
             elif (menu_input == '03'):

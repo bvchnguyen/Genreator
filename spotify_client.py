@@ -81,10 +81,10 @@ class SpotifyClient(object):
         # If such playlist exists
         if playlistName in user_playlists['items'][0]['name']:
             self.spfy_spotipy().user_playlist_add_tracks(user = user_id, 
-                                                        playlist_id = playlist['items'][0]['id'], 
+                                                        playlist_id = user_playlists['items'][0]['id'], 
                                                         tracks = track_uri, 
                                                         position=None)
-            return
+            return user_playlists['items'][0]['external_urls']['spotify']
         # If no playlist exists under that name
         else:
             playlist = self.spfy_spotipy().user_playlist_create(user = user_id, name = playlistName, public=True, 
@@ -94,4 +94,5 @@ class SpotifyClient(object):
                                                         playlist_id = playlist['id'], 
                                                         tracks = track_uri, 
                                                         position=None)
+            return playlist['external_urls']['spotify']
         
