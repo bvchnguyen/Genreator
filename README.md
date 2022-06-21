@@ -15,7 +15,7 @@ and add them to a playlist either by genre or by user's choice.
 ## Requirements:
 
 You will need to a developer's account with Youtube/google and Spotify to obtain API credentials.
-* For spotify, you will be looking for a Client_ID and a Client_Secret code.
+* For spotify, you will be looking for a Client_ID and a Client_Secret.
 * For Youtube, you will need to obtain an API Key after you created a your new project.
 * If you plan on using features that requires account access (adding to playlist, etc), then make sure to set up your spotipy object to include
 user authentification. You can read more about it in the spotipy README on [github](https://github.com/plamere/spotipy).
@@ -30,30 +30,22 @@ To obtain a channel ID, go to a page that you would like, for demonstration purp
 1. Navigating to their page, we obtain a link -- https://www.youtube.com/channel/UC5nc_ZtjKW1htCVZVRxlQAQ
 2. The channel ID then be 'UC5nc_ZtjKW1htCVZVRxlQAQ'.
 3. Enter this when choosing option '02' in the main menu.
-4. Then the program will extract up to n amount of videos from the channel, where n is the determined limit.
-5. The program will then search through spotify and add it to an existing playlist
-6. NOTE that a lot of YouTube's music are bootlegs, unofficial, or some artists are not on spotify yet. This means that the search is not perfect.
-7. Genre-ator has a name filter implemented to streamline the search. This means that if there exists an official version of the song on spotify, Genre-ator will search for that, BUT NOT the remix/bootleg version. I would recommend trying to find a playlist or channel that has official music.
+4. Then the program will extract the 10 most recent videos from the channel.
+5. The program will search through spotify to validate the song exists, and add it to a generated playlist.
 
-![](/screenshots/extraction_testing.png)
+![](/screenshots/transfer.jpg)
 
-8. Genre-ator will then ask you to create a playlist put the returned list of songs in:
-
-(Feature is primarily used for manual testing, planning on automating the playlist instead of relying on user inputs).
-
-![](/screenshots/playlist.png)
-
-7. Upon validation, it'll the add list of found songs into the playlist we just created:
-
-![](/screenshots/spfy_sc.png)
+## Constraints:
+* NOTE that a lot of YouTube's music are bootlegs, unofficial, or some artists are not on spotify yet. This means that the search is not perfect.
+* Genre-ator has a name filter implemented to streamline the search. This means that if there exists an official version of the song on spotify, Genre-ator will search for that, BUT NOT the remix/bootleg version. I would recommend trying to find a playlist or channel that has official music.
 
 ## Goals:
 Finish create a playlist option. :white_check_mark: 
 
-Add generated songs to that particular playlist. :white_check_mark:
+Add generated songs to that particular playlist. 
+
+Implement auto generate function for playlist. :white_check_mark:
 
 Implement a more streamline channel search (instead of having users manually search for the ID or convert to an ID). :o: 
-
-Implement auto generate function for playlist. :o:
 
 Implement a basic UI and/or switch over to a web stack :o:
