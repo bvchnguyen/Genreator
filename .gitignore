@@ -2,5 +2,7 @@ req.txt
 test.py
 secret_data.py
 trap_city.json
-dump.txt
+dump.json
 test_clients.py
+.cache
+__pycache__

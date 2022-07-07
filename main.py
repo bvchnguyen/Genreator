@@ -4,7 +4,7 @@ from turtle import left
 from YT_client import YT_stats
 from secret_data import clientId, clientSec, YT_API_KEY, channelID, redirect
 from spotify_client import SpotifyClient
-from helper_func import genreator_print, inputValidation
+from helper_func import genreator_print, inputValidation, yt_to_spotify
 
 def main():
 
@@ -33,22 +33,8 @@ def main():
 
             elif (menu_input == '02'):
                 channel_id = input('Enter the channel ID: ')
-                # Encapsulate this into a function
-                yt.set_channel_id(channel_id)
-                channel_name = yt.get_channel_name()
-                print('Extracting songs from', channel_name + '...')
-                title_list = yt.get_channel_video_title()
-                filtered_title = yt.filter_name(title_list)
-                artist, track = yt.split_title(filtered_title)
-                found_song_list, song_uri = spfy.search_track_spotify(artist, track)
-                genreator_print.print_list(found_song_list, channel_name, 31, 8)               
-
-                if inputValidation.generate_input_validation() == True:
-                    playlist_name = channel_name + ' Youtube Transfer'
-                    playlist_link = spfy.generate_playlist(playlist_name, user_ID, song_uri)
-                    print('Playlist generated:', playlist_link)
-                else:
-                    playlist_id = spfy.create_playlist(user_ID, song_uri)
+                yt_to_spotify.search_extraction(user_ID, yt, spfy, channel_id)
+            
             elif (menu_input == '03'):
                 print('Quiting program. Goodbye!')
                 break
