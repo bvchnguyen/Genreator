@@ -74,7 +74,7 @@ class SpotifyClient(object):
                                                     tracks = track_uri, 
                                                     position=None)
 
-    def generate_playlist(self, playlistName, user_id, track_uri) -> None:
+    def generate_playlist(self, playlistName, user_id, track_uri) -> str:
         
         yt = YT_stats(YT_API_KEY)
         user_playlists = self.spfy_spotipy().current_user_playlists(limit=15, offset=0)
@@ -84,6 +84,7 @@ class SpotifyClient(object):
                                                         playlist_id = user_playlists['items'][0]['id'], 
                                                         tracks = track_uri, 
                                                         position=None)
+            
             return user_playlists['items'][0]['external_urls']['spotify']
         # If no playlist exists under that name
         else:
@@ -94,5 +95,6 @@ class SpotifyClient(object):
                                                         playlist_id = playlist['id'], 
                                                         tracks = track_uri, 
                                                         position=None)
+            
             return playlist['external_urls']['spotify']
         

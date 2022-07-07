@@ -122,14 +122,9 @@ class YT_stats(object):
             # If conditions are true, we append our desired max result into the url string
             url += '&maxResults=' + str(limit)
         # This block is primarily use for if you have 50+ returned results
-        # Which would result in the data being stored on multiple json pages
-        # We call our per page helper function and pass through the url
         vid, npt = self.get_channel_videos_per_page(url)
         # index variable
         i = 0
-        # While loop to run through the number of next pages available
-        # We want it to run no more than 10 times per call since 
-        # we only have a limited API calls per day
         while(npt is not None and i < 1):
             # We append the page token query into the url
             next_url = url + '&pageToken=' + npt
@@ -148,17 +143,12 @@ class YT_stats(object):
         # which the returned results will be stored into multiple pages
         json_url = requests.get(url)
         data = json.loads(json_url.text)
-        # Declare a dictionary for channel videos
         channel_videos = dict()
-        # If there are no items in the json file we just parsed, then we return function
         if 'items' not in data:
             print('not found')
             return channel_videos, None
-        # Here, we are looping through each pages of json file given for that channel
         item_data = data['items']
-        # Get the nextPageToken, or return None if there is none
         nextPageToken = data.get('nextPageToken', None)
-        # print(nextPageToken)
         for item in item_data: 
             try: 
                 kind = item['id']['kind']
